@@ -51,9 +51,11 @@ const Vault = () => {
 
   const getAllPassword = async () => {
     setLoader(true);
+    //   const token = cookies.get("token") || localStorage.getItem("token");
     await axios
-      .get(
+      .post(
         `${import.meta.env.VITE_BACKEND_URL}/api/passwordVault/getAllPasswd`,
+        "",
         {
           withCredentials: true,
           credentials: "include",
@@ -63,11 +65,13 @@ const Vault = () => {
         }
       )
       .then(function (response) {
+        //   console.log(response.data.data);
         setGetSavedPasswd(response.data.data);
         setLoader(false);
       })
       .catch(function (error) {
         toast.error(error.response.data.message);
+        //   console.log(error.response.data.message);
       });
   };
 
@@ -111,8 +115,11 @@ const Vault = () => {
   const handleEditPassUnameTrash = async () => {
     try {
       setLoader(true);
-      const response = await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/api/passwordVault/deletePasswd/${currentEditId}`,
+      const response = await axios.post(
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/passwordVault/deletePasswd/${currentEditId}`,
+        " ",
         {
           withCredentials: true,
           credentials: "include",
@@ -121,7 +128,8 @@ const Vault = () => {
           },
         }
       );
-      toast.success(response.data.message);
+      // console.log(response);
+      toast.success(response.data.message); // Close the modal
       getAllPassword();
       setLoader(false);
     } catch (error) {
@@ -131,11 +139,14 @@ const Vault = () => {
     setEditPasswdUsername(false);
   };
 
-  //* Add new Logins — formData passed directly, never touches localStorage
+  // console.log(formData);
+  //* Add new LOgins
   const handleNewLogin = () => {
     setAddNewLogin((prev) => !prev);
   };
-  const handleSaveNewLogin = async (formData) => {
+  const handleSaveNewLogin = async () => {
+    //* Close the modal
+    const formData = JSON.parse(localStorage.getItem("New_LoginDetails"));
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/passwordVault/createPasswd`,
@@ -152,27 +163,45 @@ const Vault = () => {
           },
         }
       );
+      // console.log(response);
+      localStorage.removeItem("New_LoginDetails");
       toast.success(response.data.message);
       getAllPassword();
       setAddNewLogin(false);
+      setLoader(false);
     } catch (error) {
       setAddNewLogin(false);
       toast.error(error.response.data.message || "An error occurred");
+      localStorage.removeItem("New_LoginDetails");
+      setLoader(false);
     }
   };
   const handleNewLoginCancel = () => {
     setAddNewLogin(false);
   };
 
-  //* Detect vault PIN from cookie reactively — no page reload hack
+  //* refresh all password
   useEffect(() => {
-    if (v_Pin) {
+    // console.log("Running useEffect...");
+    const hasReloaded = localStorage.getItem("hasReloaded");
+    // console.log("hasReloaded:", hasReloaded);
+    // console.log("v_Pin:", v_Pin);
+
+    if (!v_Pin) {
+      if (!hasReloaded) {
+        console.log("Reloading...");
+        setCheckVpin(false);
+        localStorage.setItem("hasReloaded", true);
+        window.location.reload();
+      }
+    } else if (v_Pin) {
+      // console.log("Valid v_Pin detected.");
       setCheckVpin(true);
-      getAllPassword();
-    } else {
-      setCheckVpin(false);
+      localStorage.setItem("hasReloaded", false);
     }
-  }, [v_Pin]);
+
+    getAllPassword();
+  }, []);
 
   // *Search Password
   const handelSearch = (value) => {

@@ -44,11 +44,9 @@ const Register = () => {
         }
       )
       .then(function (response) {
-        // OTP verification token stored only in cookie — not localStorage
+        localStorage.setItem("data", response.data.data);
         setCookie("data", response.data.data, {
-          maxAge: 1800, // 30 min — matches backend OTP expiry
-          sameSite: "strict",
-          secure: window.location.protocol === "https:",
+          maxAge: 36600,
         });
         toast.success(response.data.message);
         navigate("/register/otpverify");

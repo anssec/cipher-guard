@@ -56,9 +56,15 @@ const AddNewLogins = ({ isOpen, onClose, onConfirm }) => {
   };
   const handleSaveData = (e) => {
     e.preventDefault();
-    // Pass formData directly to parent — never store credentials in localStorage
-    onConfirm(formData);
-    setFormData({ username: "", password: "", website: "" });
+    localStorage.setItem("New_LoginDetails",  JSON.stringify(formData));;
+    onConfirm();
+    isOpen
+      ? setFormData({
+          username: "",
+          password: "",
+          website: "",
+        })
+      : "";
   };
   return (
     <div className={`fixed inset-0 z-50 ${isOpen ? "" : "hidden"}`}>

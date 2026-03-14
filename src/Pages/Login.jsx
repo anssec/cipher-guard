@@ -43,13 +43,11 @@ const Login = () => {
         }
       )
       .then(function (response) {
-        // Store only profile in localStorage — token lives in httpOnly cookie only
+        localStorage.setItem("token", response.data.data);
         const profile = JSON.stringify(response.data.profile);
         localStorage.setItem("profile", profile);
         setCookie("token", response.data.data, {
-          maxAge: 43200, // 12 hours — matches backend cookie expiry
-          sameSite: "strict",
-          secure: window.location.protocol === "https:",
+          maxAge: 36600,
         });
         toast.success(response.data.message);
         navigate("/vault");
@@ -125,7 +123,8 @@ const Login = () => {
                   <button
                     className="p-2 w-8/12 rounded-full text-white bg-[#BFAFF2] mx-auto"
                     type="submit"
-                    disabled={loading}
+                    onClick={handleSubmit}
+                    disabled={loading} // Disable the button while loading
                   >
                     Login
                   </button>

@@ -4,23 +4,23 @@ import { Navigate } from "react-router-dom";
 
 const Auth = ({ Component }) => {
   const cookies = new Cookies();
-  // Use cookie as single source of truth — never localStorage for tokens
-  const token = cookies.get("token");
+  const token = cookies.get("token") || localStorage.getItem("token");
   const profile = JSON.parse(localStorage.getItem("profile"));
-
   if (!token || !profile) {
+    // console.log("no token");
     cookies.remove("token");
+    localStorage.removeItem("token");
     localStorage.removeItem("profile");
     return <Navigate to={"/login"} />;
+  } else {
+    const isMyTokenExpired = isExpired(token);
+    if (isMyTokenExpired === true) {
+      cookies.remove("token");
+      localStorage.removeItem("token");
+      localStorage.removeItem("profile");
+      return <Navigate to={"/login"} />;
+    }
   }
-
-  const isMyTokenExpired = isExpired(token);
-  if (isMyTokenExpired) {
-    cookies.remove("token");
-    localStorage.removeItem("profile");
-    return <Navigate to={"/login"} />;
-  }
-
   return (
     <div>
       <Component />

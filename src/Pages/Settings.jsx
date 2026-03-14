@@ -53,8 +53,7 @@ const Settings = () => {
 
   const fetchProfile = async () => {
     setLoader(true);
-    // Token read from cookie only — no localStorage fallback
-    const token = cookies.get("token");
+    const token = cookies.get("token") || localStorage.getItem("token");
     await axios
       .post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/profile`, "", {
         withCredentials: true,
@@ -121,11 +120,14 @@ const Settings = () => {
         }
       );
       toast.success(response.data.message);
+      window.location.reload();
       setIsModalOpen(false);
       setDataSaveloader(false);
-      setFormData({ email: "", confirmPassword: "", password: "" });
-      // Refresh profile data to reflect the new emergency email
-      fetchProfile();
+      setFormData({
+        email: "",
+        confirmPassword: "",
+        password: "",
+      });
     } catch (error) {
       toast.error(error.response.data.message || "An error occurred");
       setIsModalOpen(false);
