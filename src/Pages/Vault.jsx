@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { useEffect, useState } from "react";
-import { MobileSideBar, Sidebar, SidebarItem } from "../Components/UserSidebar";
+import { MobileSideBar, Sidebar, SidebarItem } from "../components/UserSidebar";
 const MobileSidebarItems = [
   {
     icon: <PiVaultLight className="w-5 h-5" />,
@@ -31,11 +31,11 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
 import { FaRegEdit } from "react-icons/fa";
-import EditPasswdUsername from "../Components/EditPasswdUsername";
-import AddNewLogins from "../Components/AddNewLogins";
-import EnterVaultPin from "../Components/EnterVaultPin";
+import EditPasswdUsername from "../components/EditPasswdUsername";
+import AddNewLogins from "../components/AddNewLogins";
+import EnterVaultPin from "../components/EnterVaultPin";
 // import useVaultPinStore from "../Zustand/Vault_Pin";
-import SkeletonLoader from "../Components/SkeletonLoader";
+import SkeletonLoader from "../components/SkeletonLoader";
 import { useCookies } from "react-cookie";
 const Vault = () => {
   const Profile = (() => {

@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import React, { useEffect, useState } from "react";
-import { MobileSideBar, Sidebar, SidebarItem } from "../Components/UserSidebar";
+import { MobileSideBar, Sidebar, SidebarItem } from "../components/UserSidebar";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Cookies } from "react-cookie";

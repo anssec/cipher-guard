@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import React, { useEffect, useState } from "react";
-import { MobileSideBar, Sidebar, SidebarItem } from "../Components/UserSidebar";
+import { MobileSideBar, Sidebar, SidebarItem } from "../components/UserSidebar";
 const MobileSidebarItems = [
   {
     icon: <PiVaultLight className="w-5 h-5" />,
@@ -30,11 +30,11 @@ import { RiAiGenerate } from "react-icons/ri";
 import { IoSettingsOutline } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
-import EnterVaultPin from "../Components/EnterVaultPin";
+import EnterVaultPin from "../components/EnterVaultPin";
 // import useVaultPinStore from "../Zustand/Vault_Pin";
-import NoteSkeletonLoader from "../Components/NoteSkeletonLoader";
-import AddNewNotes from "../Components/AddNewNotes";
-import EditNotes from "../Components/EditNotes";
+import NoteSkeletonLoader from "../components/NoteSkeletonLoader";
+import AddNewNotes from "../components/AddNewNotes";
+import EditNotes from "../components/EditNotes";
 import { CiStickyNote } from "react-icons/ci";
 import { FaRegStar } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";

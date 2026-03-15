@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import React, { useState } from "react";
-import { MobileSideBar, Sidebar, SidebarItem } from "../Components/UserSidebar";
+import { MobileSideBar, Sidebar, SidebarItem } from "../components/UserSidebar";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { FaArrowsRotate } from "react-icons/fa6";
 import { Link } from "react-router-dom";

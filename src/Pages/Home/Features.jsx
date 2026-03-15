@@ -1,4 +1,4 @@
-import FeaturesCompnent from "../../Components/FeaturesCompnent.jsx";
+import FeaturesCompnent from "../../components/FeaturesCompnent.jsx";
 import meterImg from "../../assets/meter.png";
 import emergencyImg from "../../assets/emergency.png";
 import exportImg from "../../assets/export-file.png";
