@@ -10,13 +10,19 @@ import { toast } from "react-hot-toast";
 export const Sidebar = ({ children }) => {
   const [expanded, setExpanded] = useState(true);
   const cookies = new Cookies();
-  const Profile = JSON.parse(localStorage.getItem("admin_profile"));
+  const Profile = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("admin_profile")) || {};
+    } catch {
+      return {};
+    }
+  })();
   const navigate = useNavigate();
   const logoutHandler = () => {
     cookies.remove("admin_token");
     localStorage.removeItem("admin_token");
     localStorage.removeItem("admin_profile");
-    toast.success("Loggout");
+    toast.success("Logout");
     navigate("/");
   };
   return (
@@ -44,7 +50,7 @@ export const Sidebar = ({ children }) => {
             <div onClick={logoutHandler}>
               <SidebarItem
                 icon={<FaSignOutAlt className=" w-5 h-5" />}
-                text={"Loggout"}
+                text={"Logout"}
               />
             </div>
           </ul>
@@ -113,7 +119,13 @@ export function SidebarItem({ icon, text, active }) {
 export const MobileSideBar = ({ items }) => {
   const navigate = useNavigate();
   const cookies = new Cookies();
-  const Profile = JSON.parse(localStorage.getItem("admin_profile"));
+  const Profile = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("admin_profile")) || {};
+    } catch {
+      return {};
+    }
+  })();
   const logoutHandler = () => {
     cookies.remove("admin_token");
     localStorage.removeItem("admin_token");

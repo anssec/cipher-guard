@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import React, { useEffect, useState } from "react";
-import { MobileSideBar, Sidebar, SidebarItem } from "../components/UserSidebar";
+import { MobileSideBar, Sidebar, SidebarItem } from "../Components/UserSidebar";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Cookies } from "react-cookie";
@@ -31,7 +31,13 @@ const MobileSidebarItems = [
 ];
 
 const Settings = () => {
-  const Profile = JSON.parse(localStorage.getItem("profile"));
+  const Profile = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("profile")) || {};
+    } catch {
+      return {};
+    }
+  })();
   const cookies = new Cookies();
   const [isUserProfile, setIsUserProfile] = useState({});
   const [loader, setLoader] = useState(false);
@@ -67,7 +73,7 @@ const Settings = () => {
         setLoader(false);
       })
       .catch(function (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "An error occurred");
         setLoader(false);
       });
   };

@@ -5,7 +5,12 @@ const Auth = ({ Component = () => null }) => {
   const cookies = new Cookies();
   const token =
     cookies.get("admin_token") || localStorage.getItem("admin_token");
-  const adminProfile = JSON.parse(localStorage.getItem("admin_profile"));
+  let adminProfile = null;
+  try {
+    adminProfile = JSON.parse(localStorage.getItem("admin_profile"));
+  } catch {
+    adminProfile = null;
+  }
   if (!token || !adminProfile) {
     // console.log("no token");
     cookies.remove("admin_token");

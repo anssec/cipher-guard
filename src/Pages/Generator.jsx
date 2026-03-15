@@ -1,11 +1,11 @@
 import { Helmet } from "react-helmet-async";
 import React, { useState } from "react";
-import { MobileSideBar, Sidebar, SidebarItem } from "../components/UserSidebar";
+import { MobileSideBar, Sidebar, SidebarItem } from "../Components/UserSidebar";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { FaArrowsRotate } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Cookies } from "react-cookie";
+
 import { PiVaultLight } from "react-icons/pi";
 import { GrDocumentNotes } from "react-icons/gr";
 import { RiAiGenerate } from "react-icons/ri";
@@ -131,7 +131,13 @@ const Generator = () => {
       toast.error("Failed to copy");
     }
   };
-  const Profile = JSON.parse(localStorage.getItem("profile"));
+  const Profile = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("profile")) || {};
+    } catch {
+      return {};
+    }
+  })();
   return (
     <main className="flex h-screen overflow-hidden pr-4 py-4 bg-black">
       <Helmet>

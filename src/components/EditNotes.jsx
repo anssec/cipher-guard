@@ -72,7 +72,7 @@ const EditNotes = ({ isOpen, onClose, onConfirm, onTrash, onUserData }) => {
         }));
         setViewNoteLoader(false);
       } catch (error) {
-        toast.error(error.response.data.message || "An error occurred");
+        toast.error(error.response?.data?.message || "An error occurred");
         setViewNoteLoader(false);
       }
     }

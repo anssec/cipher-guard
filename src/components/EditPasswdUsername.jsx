@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { MdOutlineContentCopy } from "react-icons/md";
-import { FaEyeSlash } from "react-icons/fa";
-import { FaTrashAlt } from "react-icons/fa";
-import { FaEye } from "react-icons/fa";
+import { FaEyeSlash, FaTrashAlt, FaEye } from "react-icons/fa";
 import { RxOpenInNewWindow } from "react-icons/rx";
 import CryptoJS from "crypto-js";
 import { toast } from "react-hot-toast";
@@ -21,10 +19,10 @@ const EditPasswdUsername = ({
     password: "",
     website: "",
   });
-  const [cookies, setCookie, removeCookie] = useCookies(["cookie-name"]);
+  const [cookies] = useCookies(["cookie-name"]);
   const v_Pin = cookies["v_pin"];
   const [showPasswd, setShowPasswd] = useState(false);
-  const [text, setText] = useState("");
+
   useEffect(() => {
     setFormData({
       name: onUserData.name,
@@ -43,8 +41,9 @@ const EditPasswdUsername = ({
   };
 
   const handleConfirm = () => {
-    onConfirm(formData, onUserData._id); // Pass formData and _id
+    onConfirm(formData, onUserData._id);
   };
+
   const showPasswdHandler = () => {
     setShowPasswd((prev) => !prev);
     if (!showPasswd) {
@@ -67,39 +66,41 @@ const EditPasswdUsername = ({
       }));
     }
   };
-  const handleCancle = () => {
+
+  const handleCancel = () => {
     setShowPasswd(false);
     onClose();
   };
+
   const usernameCopyToClipboard = async () => {
-    setText(formData.username);
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(formData.username);
       toast.success("Username copied");
     } catch (err) {
       toast.error("Failed to copy");
     }
   };
+
   const passwordCopyToClipboard = async () => {
     if (showPasswd) {
-      setText(formData.password);
       try {
-        await navigator.clipboard.writeText(text);
+        await navigator.clipboard.writeText(formData.password);
         toast.success("Password copied");
       } catch (err) {
         toast.error("Failed to copy");
       }
     }
   };
+
   const urlCopyToClipboard = async () => {
-    setText(formData.website);
     try {
-      await navigator.clipboard.writeText(text);
-      toast.success("url copied");
+      await navigator.clipboard.writeText(formData.website);
+      toast.success("URL copied");
     } catch (err) {
       toast.error("Failed to copy");
     }
   };
+
   return (
     <div className={`fixed inset-0 z-50 ${isOpen ? "" : "hidden"}`}>
       <div className="flex items-center justify-center min-h-screen">
@@ -115,8 +116,9 @@ const EditPasswdUsername = ({
 
             <div className=" flex flex-col my-4 gap-2">
               <div className=" flex flex-col">
-                <label htmlFor="">Name</label>
+                <label htmlFor="edit-name">Name</label>
                 <input
+                  id="edit-name"
                   className=" bg-neutral-50 focus:outline-none border  border-neutral-400 rounded-md p-2"
                   type="text"
                   name="name"
@@ -125,9 +127,10 @@ const EditPasswdUsername = ({
                 />
               </div>
               <div className=" flex flex-col">
-                <label htmlFor="">Username</label>
+                <label htmlFor="edit-username">Username</label>
                 <div className=" flex w-full">
                   <input
+                    id="edit-username"
                     className=" bg-neutral-50 w-[90%] focus:outline-none border  border-neutral-400 rounded-l-md p-2"
                     type="text"
                     name="username"
@@ -143,9 +146,10 @@ const EditPasswdUsername = ({
                 </div>
               </div>
               <div className=" flex flex-col">
-                <label htmlFor="">Password</label>
+                <label htmlFor="edit-password">Password</label>
                 <div className=" flex w-full">
                   <input
+                    id="edit-password"
                     className={` bg-neutral-50 w-[80%] focus:outline-none border  border-neutral-400 rounded-l-md p-2 ${
                       showPasswd ? "" : "cursor-not-allowed"
                     }`}
@@ -153,7 +157,7 @@ const EditPasswdUsername = ({
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    disabled={showPasswd ? false : true}
+                    disabled={!showPasswd}
                   />
                   <div
                     className="bg-neutral-50 w-12 h-12 border cursor-pointer flex items-center justify-center border-neutral-400"
@@ -178,9 +182,10 @@ const EditPasswdUsername = ({
                 </div>
               </div>
               <div className=" flex flex-col">
-                <label htmlFor="">Url</label>
+                <label htmlFor="edit-website">URL</label>
                 <div className=" flex w-full">
                   <input
+                    id="edit-website"
                     className=" bg-neutral-50 w-[80%] focus:outline-none border  border-neutral-400 rounded-l-md p-2"
                     type="text"
                     name="website"
@@ -223,7 +228,7 @@ const EditPasswdUsername = ({
               </button>
               <button
                 className="ml-2 px-4 py-2 text-black border hover:bg-neutral-100 border-neutral-500 rounded-md"
-                onClick={handleCancle}
+                onClick={handleCancel}
               >
                 Cancel
               </button>

@@ -30,7 +30,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await axios()
+    await axios
       .post(
         `${import.meta.env.VITE_BACKEND_URL}/api/admin/adminLogin`,
         {
@@ -53,7 +53,7 @@ const Login = () => {
         navigate("/admin/dashboard");
       })
       .catch(function (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "An error occurred");
       });
     setLoading(false);
   };
@@ -123,8 +123,7 @@ const Login = () => {
                   <button
                     className="p-2 w-8/12 rounded-full text-white bg-[#BFAFF2] mx-auto"
                     type="submit"
-                    onClick={handleSubmit}
-                    disabled={loading} // Disable the button while loading
+                    disabled={loading}
                   >
                     Login
                   </button>

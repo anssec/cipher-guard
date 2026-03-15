@@ -47,7 +47,13 @@ export const Sidebar = ({ children }) => {
   });
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const cookies = new Cookies();
-  const Profile = JSON.parse(localStorage.getItem("profile"));
+  const Profile = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("profile")) || {};
+    } catch {
+      return {};
+    }
+  })();
   const navigate = useNavigate();
   const logoutHandler = () => {
     setLogoutModalOpen(true);
@@ -59,7 +65,7 @@ export const Sidebar = ({ children }) => {
     cookies.remove("v_pin");
     localStorage.removeItem("token");
     localStorage.removeItem("profile");
-    toast.success("Loggout");
+    toast.success("Logout");
     navigate("/");
   };
 
@@ -116,7 +122,7 @@ export const Sidebar = ({ children }) => {
             <div onClick={logoutHandler}>
               <SidebarItem
                 icon={<PiSignOut className=" w-5 h-5" />}
-                text={"Loggout"}
+                text={"Logout"}
               />
             </div>
           </ul>
@@ -170,7 +176,13 @@ export const MobileSideBar = ({ items }) => {
   const navigate = useNavigate();
   const cookies = new Cookies();
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
-  const Profile = JSON.parse(localStorage.getItem("profile"));
+  const Profile = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("profile")) || {};
+    } catch {
+      return {};
+    }
+  })();
   const logoutHandler = () => {
     setLogoutModalOpen(true);
   };

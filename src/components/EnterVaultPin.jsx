@@ -5,17 +5,18 @@ import { toast } from "react-hot-toast";
 import { MdErrorOutline } from "react-icons/md";
 import JSCookies from "js-cookie";
 import { Link } from "react-router-dom";
-// import useVaultPinStore from "../Zustand/Vault_Pin";
+
 const EnterVaultPin = () => {
   const cookies = new Cookies();
-  const inputRefs = Array.from({ length: 6 }, () => useRef(null));
+  const inputRefs = useRef([]);
   const [vaultPin, setVaultPin] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
   const handleInputChange = (index, value) => {
     // Move to the next input if value is entered
-    if (value && index < inputRefs.length - 1) {
-      inputRefs[index + 1].current.focus();
+    if (value && index < 5) {
+      inputRefs.current[index + 1]?.focus();
     }
 
     // Update the vault pin
@@ -24,6 +25,7 @@ const EnterVaultPin = () => {
     }).join("");
     setVaultPin(newVaultPin);
   };
+
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,8 +56,7 @@ const EnterVaultPin = () => {
         toast.success(response.data.message);
       })
       .catch(function (error) {
-        // cookies.set("v_pin", null);
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error.response?.data?.message || "An error occurred");
         setError(true);
       });
   };
@@ -73,10 +74,10 @@ const EnterVaultPin = () => {
           ""
         )}
         <div className="flex flex-row space-x-2">
-          {inputRefs.map((ref, index) => (
+          {Array.from({ length: 6 }, (_, index) => (
             <input
               key={index}
-              ref={ref}
+              ref={(el) => (inputRefs.current[index] = el)}
               className="w-10 h-10 rounded-lg text-center outline-none border-2"
               maxLength={1}
               minLength={1}

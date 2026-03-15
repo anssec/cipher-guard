@@ -5,7 +5,12 @@ import { Navigate } from "react-router-dom";
 const Auth = ({ Component }) => {
   const cookies = new Cookies();
   const token = cookies.get("token") || localStorage.getItem("token");
-  const profile = JSON.parse(localStorage.getItem("profile"));
+  let profile = null;
+  try {
+    profile = JSON.parse(localStorage.getItem("profile"));
+  } catch {
+    profile = null;
+  }
   if (!token || !profile) {
     // console.log("no token");
     cookies.remove("token");

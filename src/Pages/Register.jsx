@@ -52,7 +52,7 @@ const Register = () => {
         navigate("/register/otpverify");
       })
       .catch(function (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "An error occurred");
       });
     setLoading(false);
   };
@@ -169,7 +169,7 @@ const Register = () => {
                 )}
               </form>
             </div>
-            <div>Aready have account?</div>
+            <div>Already have an account?</div>
             <Link
               className=" mt-3 p-2 w-7/12 rounded-full text-center text-[#BFAFF2] border border-[#BFAFF2] cursor-pointer"
               to="/login"

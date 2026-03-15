@@ -66,10 +66,9 @@ const Dashboard = () => {
         })
         .then(function (response) {
           setData(response.data.data);
-          // console.log(response.data.data);
         })
         .catch(function (error) {
-          // console.error(error.response.data.message);
+          // Silently handle error
         });
       setLoading(false);
     };
@@ -177,7 +176,7 @@ const Dashboard = () => {
             </h5>
             <Link
               to={"/admin/users"}
-              class="text-sm font-medium hover:underline text-blue-500"
+              className="text-sm font-medium hover:underline text-blue-500"
             >
               View all
             </Link>

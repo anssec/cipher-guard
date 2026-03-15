@@ -91,17 +91,17 @@ const AddNewNotes = ({ isOpen, onClose, onConfirm }) => {
                   className="bg-neutral-50 focus:outline-none border border-neutral-400 rounded-md accent-black p-2"
                   type="checkbox"
                   name="favorite"
-                  value={formData.favorite}
+                  checked={formData.favorite}
                   onChange={handleCheckedChange}
                 />
               </div>
               <div className="flex items-center gap-3">
-                <label htmlFor="name">Encrypte Note: </label>
+                <label htmlFor="lockNote">Encrypt Note: </label>
                 <input
                   className="bg-neutral-50 focus:outline-none border border-neutral-400 rounded-md accent-black p-2"
                   type="checkbox"
                   name="lockNote"
-                  value={formData.lockNote}
+                  checked={formData.lockNote}
                   onChange={handleCheckedChange}
                 />
               </div>

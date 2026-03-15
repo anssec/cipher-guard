@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import React, { useEffect, useState } from "react";
-import { MobileSideBar, Sidebar, SidebarItem } from "../components/UserSidebar";
+import { MobileSideBar, Sidebar, SidebarItem } from "../Components/UserSidebar";
 const MobileSidebarItems = [
   {
     icon: <PiVaultLight className="w-5 h-5" />,
@@ -30,17 +30,23 @@ import { RiAiGenerate } from "react-icons/ri";
 import { IoSettingsOutline } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
-import EnterVaultPin from "../components/EnterVaultPin";
+import EnterVaultPin from "../Components/EnterVaultPin";
 // import useVaultPinStore from "../Zustand/Vault_Pin";
-import NoteSkeletonLoader from "../components/NoteSkeletonLoader";
-import AddNewNotes from "../components/AddNewNotes";
-import EditNotes from "../components/EditNotes";
+import NoteSkeletonLoader from "../Components/NoteSkeletonLoader";
+import AddNewNotes from "../Components/AddNewNotes";
+import EditNotes from "../Components/EditNotes";
 import { CiStickyNote } from "react-icons/ci";
 import { FaRegStar } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
 import { useCookies } from "react-cookie";
 const Notes = () => {
-  const Profile = JSON.parse(localStorage.getItem("profile"));
+  const Profile = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("profile")) || {};
+    } catch {
+      return {};
+    }
+  })();
   // const { v_Pin } = useVaultPinStore();
   const [cookies, setCookie, removeCookie] = useCookies(["cookie-name"]);
   const v_Pin = cookies["v_pin"];
@@ -69,7 +75,7 @@ const Notes = () => {
         setLoader(false);
       })
       .catch(function (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "An error occurred");
         //   console.log(error.response.data.message);
       });
   };
@@ -156,7 +162,7 @@ const Notes = () => {
         `${import.meta.env.VITE_BACKEND_URL}/api/note/createNote`,
         {
           name: formData.name,
-          note: formData.name,
+          note: formData.note,
           favorite: formData.favorite,
           lockNote: formData.lockNote,
         },
@@ -193,13 +199,11 @@ const Notes = () => {
 
     if (!v_Pin) {
       if (!hasReloaded) {
-        console.log("Reloading...");
         setCheckVpin(false);
         localStorage.setItem("hasReloaded", true);
         window.location.reload();
       }
     } else if (v_Pin) {
-      // console.log("Valid v_Pin detected.");
       setCheckVpin(true);
       localStorage.setItem("hasReloaded", false);
     }
@@ -208,7 +212,7 @@ const Notes = () => {
   }, []);
   // Add hasReloaded to the dependency array
   //* Search Note
-  const handelSearch = (value) => {
+  const handleSearch = (value) => {
     if (!value) {
       getAllNote();
     } else {
@@ -220,8 +224,9 @@ const Notes = () => {
   };
 
   const handleFavorite = async () => {
-    setIsFavorite((prev) => !prev);
-    if (isfavorite) {
+    const newFavorite = !isfavorite;
+    setIsFavorite(newFavorite);
+    if (newFavorite) {
       try {
         const response = await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/api/note/getFavoriteNote`,
@@ -234,11 +239,10 @@ const Notes = () => {
             },
           }
         );
-        // console.log(response);
         setGetNotes(response.data.data);
         setLoader(false);
       } catch (error) {
-        toast.error(error.response.data.message || "An error occurred");
+        toast.error(error.response?.data?.message || "An error occurred");
         setLoader(false);
       }
     } else {
@@ -307,7 +311,7 @@ const Notes = () => {
                   type="text"
                   className=" focus:outline-none w-full lg:w-fit bg-transparent text-base"
                   placeholder="Search Notes"
-                  onChange={(e) => handelSearch(e.target.value)}
+                  onChange={(e) => handleSearch(e.target.value)}
                 />
               </div>
             </div>
@@ -327,32 +331,30 @@ const Notes = () => {
                 <NoteSkeletonLoader />
               ) : (
                 <div className="mt-4 overflow-y-auto no-scrollbar">
-                  {getNotes.map((value, index) => (
-                    <>
-                      <div
-                        key={index}
-                        className=" w-full flex items-center justify-between border-t border-neutral-400 py-2.5 px-4 hover:bg-neutral-100 transition-all cursor-pointer overflow-y-auto no-scrollbar"
-                        onClick={() => handleEditNotes(value._id)}
-                      >
-                        <CiStickyNote className="w-6 h-6" />
-                        <div className=" w-full mx-3">
-                          <p className=" text-blue-800 font-semibold break-all text-base">
-                            {value.name}
-                          </p>
-                        </div>
+                  {getNotes.map((value) => (
+                    <div
+                      key={value._id}
+                      className=" w-full flex items-center justify-between border-t border-neutral-400 py-2.5 px-4 hover:bg-neutral-100 transition-all cursor-pointer overflow-y-auto no-scrollbar"
+                      onClick={() => handleEditNotes(value._id)}
+                    >
+                      <CiStickyNote className="w-6 h-6" />
+                      <div className=" w-full mx-3">
+                        <p className=" text-blue-800 font-semibold break-all text-base">
+                          {value.name}
+                        </p>
                       </div>
-                      <EditNotes
-                        isOpen={editNotes}
-                        onClose={handleEditNotesCancel}
-                        onConfirm={handleSaveNotes}
-                        onTrash={handleEditNotesTrash}
-                        onUserData={
-                          getNotes.find((item) => item._id === currentEditId) ||
-                          {}
-                        }
-                      />
-                    </>
+                    </div>
                   ))}
+                  <EditNotes
+                    isOpen={editNotes}
+                    onClose={handleEditNotesCancel}
+                    onConfirm={handleSaveNotes}
+                    onTrash={handleEditNotesTrash}
+                    onUserData={
+                      getNotes.find((item) => item._id === currentEditId) ||
+                      {}
+                    }
+                  />
                 </div>
               )}
             </div>

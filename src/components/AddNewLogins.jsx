@@ -41,7 +41,7 @@ const AddNewLogins = ({ isOpen, onClose, onConfirm }) => {
       }));
       setLoader(false);
     } catch (error) {
-      toast.error(error.response.data.message || "An error occurred");
+      toast.error(error.response?.data?.message || "An error occurred");
       setLoader(false);
     }
   };
@@ -56,7 +56,7 @@ const AddNewLogins = ({ isOpen, onClose, onConfirm }) => {
   };
   const handleSaveData = (e) => {
     e.preventDefault();
-    localStorage.setItem("New_LoginDetails",  JSON.stringify(formData));;
+    localStorage.setItem("New_LoginDetails",  JSON.stringify(formData));
     onConfirm();
     isOpen
       ? setFormData({

@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { useEffect, useState } from "react";
-import { MobileSideBar, Sidebar, SidebarItem } from "../components/UserSidebar";
+import { MobileSideBar, Sidebar, SidebarItem } from "../Components/UserSidebar";
 const MobileSidebarItems = [
   {
     icon: <PiVaultLight className="w-5 h-5" />,
@@ -31,14 +31,20 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
 import { FaRegEdit } from "react-icons/fa";
-import EditPasswdUsername from "../components/EditPasswdUsername";
-import AddNewLogins from "../components/AddNewLogins";
-import EnterVaultPin from "../components/EnterVaultPin";
+import EditPasswdUsername from "../Components/EditPasswdUsername";
+import AddNewLogins from "../Components/AddNewLogins";
+import EnterVaultPin from "../Components/EnterVaultPin";
 // import useVaultPinStore from "../Zustand/Vault_Pin";
-import SkeletonLoader from "../components/SkeletonLoader";
+import SkeletonLoader from "../Components/SkeletonLoader";
 import { useCookies } from "react-cookie";
 const Vault = () => {
-  const Profile = JSON.parse(localStorage.getItem("profile"));
+  const Profile = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("profile")) || {};
+    } catch {
+      return {};
+    }
+  })();
   const [cookies, setCookie, removeCookie] = useCookies(["cookie-name"]);
   const v_Pin = cookies["v_pin"];
   const [loader, setLoader] = useState(false);
@@ -70,8 +76,7 @@ const Vault = () => {
         setLoader(false);
       })
       .catch(function (error) {
-        toast.error(error.response.data.message);
-        //   console.log(error.response.data.message);
+        toast.error(error.response?.data?.message || "An error occurred");
       });
   };
 
@@ -189,13 +194,11 @@ const Vault = () => {
 
     if (!v_Pin) {
       if (!hasReloaded) {
-        console.log("Reloading...");
         setCheckVpin(false);
         localStorage.setItem("hasReloaded", true);
         window.location.reload();
       }
     } else if (v_Pin) {
-      // console.log("Valid v_Pin detected.");
       setCheckVpin(true);
       localStorage.setItem("hasReloaded", false);
     }
@@ -203,8 +206,7 @@ const Vault = () => {
     getAllPassword();
   }, []);
 
-  // *Search Password
-  const handelSearch = (value) => {
+  const handleSearch = (value) => {
     if (!value) {
       getAllPassword();
     } else {
@@ -267,7 +269,7 @@ const Vault = () => {
                   type="text"
                   className=" focus:outline-none w-full lg:w-fit bg-transparent text-base"
                   placeholder="Search logins"
-                  onChange={(e) => handelSearch(e.target.value)}
+                  onChange={(e) => handleSearch(e.target.value)}
                 />
               </div>
             </div>
@@ -287,41 +289,39 @@ const Vault = () => {
                 <SkeletonLoader />
               ) : (
                 <div className="mt-4 overflow-y-auto no-scrollbar">
-                  {getSavedPasswd.map((value, index) => (
-                    <>
-                      <div
-                        key={index}
-                        className=" w-full flex items-center justify-between border-t border-neutral-400 py-2.5 px-4 hover:bg-neutral-100 transition-all cursor-pointer overflow-y-auto no-scrollbar"
-                      >
-                        <img className="w-5 h-5" src={value.websiteFavicon} />
-                        <div className=" w-full mx-3">
-                          <p className=" text-blue-800 font-semibold break-all text-base">
-                            {value.name}
-                          </p>
-                          <p className=" text-neutral-500 w-24 sm:w-56 text-ellipsis overflow-hidden text-sm">
-                            {value.username}
-                          </p>
-                        </div>
-                        <div className=" w-6 h-6 flex items-center justify-center">
-                          <FaRegEdit
-                            onClick={() => handleEditPassUname(value._id)}
-                            className="w-5 h-5 cursor-pointer"
-                          />
-                        </div>
+                  {getSavedPasswd.map((value) => (
+                    <div
+                      key={value._id}
+                      className=" w-full flex items-center justify-between border-t border-neutral-400 py-2.5 px-4 hover:bg-neutral-100 transition-all cursor-pointer overflow-y-auto no-scrollbar"
+                    >
+                      <img className="w-5 h-5" src={value.websiteFavicon} alt={value.name} />
+                      <div className=" w-full mx-3">
+                        <p className=" text-blue-800 font-semibold break-all text-base">
+                          {value.name}
+                        </p>
+                        <p className=" text-neutral-500 w-24 sm:w-56 text-ellipsis overflow-hidden text-sm">
+                          {value.username}
+                        </p>
                       </div>
-                      <EditPasswdUsername
-                        isOpen={editPasswdUsername}
-                        onClose={handleEditPassUnameCancel}
-                        onConfirm={handleSavePassUname}
-                        onTrash={handleEditPassUnameTrash}
-                        onUserData={
-                          getSavedPasswd.find(
-                            (item) => item._id === currentEditId
-                          ) || {}
-                        }
-                      />
-                    </>
+                      <div className=" w-6 h-6 flex items-center justify-center">
+                        <FaRegEdit
+                          onClick={() => handleEditPassUname(value._id)}
+                          className="w-5 h-5 cursor-pointer"
+                        />
+                      </div>
+                    </div>
                   ))}
+                  <EditPasswdUsername
+                    isOpen={editPasswdUsername}
+                    onClose={handleEditPassUnameCancel}
+                    onConfirm={handleSavePassUname}
+                    onTrash={handleEditPassUnameTrash}
+                    onUserData={
+                      getSavedPasswd.find(
+                        (item) => item._id === currentEditId
+                      ) || {}
+                    }
+                  />
                 </div>
               )}
             </div>

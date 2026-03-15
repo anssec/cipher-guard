@@ -1,5 +1,5 @@
-import React from "react";
 import { useState } from "react";
+
 import { RiLockPasswordLine } from "react-icons/ri";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
@@ -32,7 +32,7 @@ const EmailVerify = () => {
     // Add your form submission logic here
     await axios
       .post(
-        "https://cipher-guard-backend.vercel.app/api/auth/register/verifyOtp",
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/register/verifyOtp`,
         formData,
         {
           headers: {
@@ -49,7 +49,7 @@ const EmailVerify = () => {
         setLoading(false);
       })
       .catch(function (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "An error occurred");
         setLoading(false);
       });
   };
@@ -74,7 +74,7 @@ const EmailVerify = () => {
         setLoading(false);
       })
       .catch(function (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "An error occurred");
         setLoading(false);
       });
   };

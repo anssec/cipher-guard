@@ -1,9 +1,4 @@
 import HeroImg from "../../assets/HeroImg.png";
-import { SiAccenture } from "react-icons/si";
-import { FaMicrosoft } from "react-icons/fa";
-import { FaApple } from "react-icons/fa";
-import { FaGoogle } from "react-icons/fa";
-import { RiNetflixFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 const Hero = () => {
   return (

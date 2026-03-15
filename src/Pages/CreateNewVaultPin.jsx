@@ -1,7 +1,15 @@
 import { Helmet } from "react-helmet-async";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { toast } from "react-hot-toast";
-import { MobileSideBar, Sidebar, SidebarItem } from "../components/UserSidebar";
+import { MobileSideBar, Sidebar, SidebarItem } from "../Components/UserSidebar";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { Cookies } from "react-cookie";
+import { PiVaultLight } from "react-icons/pi";
+import { GrDocumentNotes } from "react-icons/gr";
+import { RiAiGenerate } from "react-icons/ri";
+import { IoSettingsOutline } from "react-icons/io5";
+
 const MobileSidebarItems = [
   {
     icon: <PiVaultLight className="w-5 h-5" />,
@@ -21,22 +29,23 @@ const MobileSidebarItems = [
     active: true,
   },
 ];
-import { Link, Navigate, redirect } from "react-router-dom";
-import axios from "axios";
-import { Cookies } from "react-cookie";
-import { PiVaultLight } from "react-icons/pi";
-import { GrDocumentNotes } from "react-icons/gr";
-import { RiAiGenerate } from "react-icons/ri";
-import { IoSettingsOutline } from "react-icons/io5";
+
 const CreateNewVaultPin = () => {
   const cookies = new Cookies();
-  const Profile = JSON.parse(localStorage.getItem("profile"));
-  const inputRefs = Array.from({ length: 6 }, () => useRef(null));
+  const Profile = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("profile")) || {};
+    } catch {
+      return {};
+    }
+  })();
+  const inputRefs = useRef([]);
   const [vaultPin, setVaultPin] = useState("");
+
   const handleInputChange = (index, value) => {
     // Move to the next input if value is entered
-    if (value && index < inputRefs.length - 1) {
-      inputRefs[index + 1].current.focus();
+    if (value && index < 5) {
+      inputRefs.current[index + 1]?.focus();
     }
 
     // Update the vault pin
@@ -67,7 +76,7 @@ const CreateNewVaultPin = () => {
         toast.success(response.data.message);
       })
       .catch(function (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "An error occurred");
       });
   };
 
@@ -112,10 +121,10 @@ const CreateNewVaultPin = () => {
       <main className=" w-full bg-white rounded-3xl p-4">
         <div className=" h-full flex flex-col justify-center items-center gap-3">
           <div className="flex flex-row space-x-2">
-            {inputRefs.map((ref, index) => (
+            {Array.from({ length: 6 }, (_, index) => (
               <input
                 key={index}
-                ref={ref}
+                ref={(el) => (inputRefs.current[index] = el)}
                 className="w-10 h-10 rounded-lg text-center outline-none border-2"
                 maxLength={1}
                 minLength={1}
